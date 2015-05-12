@@ -11,7 +11,7 @@ class Square
 private:
 	Coordinate LB;
 	Coordinate RA;
-
+	int id;
 
 public:
 	Square();
@@ -23,8 +23,11 @@ public:
 	double getWidth();
 	double getHeight();
 
+	int getId();
+	void setId(int id);
+
 	bool intersects(Square square, vector<Coordinate> & points);
 	Square getBoundingRectangle(Square square, vector<double> pos);
-	void getIntersectionPoints(Square Square, vector<Coordinate> & points);
+	void Square::getIntersection(Square square, vector<Coordinate> & pos);
 };
 

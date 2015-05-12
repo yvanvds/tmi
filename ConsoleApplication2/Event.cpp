@@ -7,16 +7,20 @@ Event::Event()
 {
 }
 
-Event::Event(double xcoor, Square sq){
-	x = xcoor;
+Event::Event(bool isLeftEdge, Square sq, double xcoor){
+	type = isLeftEdge;
 	square = sq;
+	x = xcoor;
 }
 
-double Event::getX(){
-	return x;
+bool Event::isLeftEdge(){
+	return type;
 }
 
 Square Event::getSquare(){
 	return square;
 }
 
+double Event::getX(){
+	return x;
+}

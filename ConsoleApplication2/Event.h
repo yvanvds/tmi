@@ -4,12 +4,14 @@
 class Event
 {
 private:
-	double x;
+	bool type;
 	Square square;
+	double x;
 public:
 	Event();
-	Event(double x, Square square);
-	double getX();
+	Event(bool type, Square square, double x);
+	bool isLeftEdge();
 	Square getSquare();
+	double getX();
 };
 

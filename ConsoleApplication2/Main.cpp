@@ -6,6 +6,7 @@
 #include "LineParser.h"
 #include "Square.h"
 #include "Algorithm.h"
+#include "IntervalTree.h"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -15,6 +16,7 @@ using namespace std;
 
 int _tmain(int argc, _TCHAR* argv[])
 {
+	
 	string nextLine;
 	int count = 0;
 	int algorithm = 0;
@@ -22,7 +24,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	vector<double> pos;
 	std::vector<Square> array;
 
-	ifstream input("input.txt");
+	ifstream input("inputint.txt");
 	if (input.is_open())
 	{
 		cout << "The following file is being read: \n\n";
@@ -42,13 +44,51 @@ int _tmain(int argc, _TCHAR* argv[])
 				array.reserve(stoi(nextLine));
 			}
 		}
+
+		for (int i = 0; i < array.size(); i++){
+			array[i].setId(i);
+			//cout << "\nRectangle " << i << " " << array[i].getLB().getX() << " " << array[i].getLB().getY() << " " << array[i].getRA().getX() << " " << array[i].getRA().getY();
+		}
 		
-		getIntersections(algorithm, array);
+		//getIntersections(algorithm, array);
 		getIntersections(2, array);
 		input.close();
 	}
+	
 
 
+	/* Test interval tree*/
+	/*
+	vector<double> pos;
+	vector<Square> array;
+	pos.emplace_back(4);
+	pos.emplace_back(1);
+	pos.emplace_back(6);
+	pos.emplace_back(3);
+	array.emplace_back(Square(pos));
+	pos.clear();
+
+	pos.emplace_back(4);
+	pos.emplace_back(4);
+	pos.emplace_back(6);
+	pos.emplace_back(6);
+	array.emplace_back(Square(pos));
+	pos.clear();
+
+	vector<Interval<Square>> intervals;
+	IntervalTree<Square> tree;
+	intervals.push_back(Interval<Square>(array[0].getLB().getY(), array[0].getRA().getY(), array[0]));
+	intervals.push_back(Interval<Square>(array[1].getLB().getY(), array[1].getRA().getY(), array[1]));
+	tree = IntervalTree<Square>(intervals);
+
+	vector<Interval<Square> > results;
+	tree.findOverlapping(0, 2, results);
+	cout << "found " << results.size() << " overlapping intervals" << endl;
+	for (int i = 0; i < results.size(); i++){
+		cout << results[i].start << " " << results[i].stop << endl;
+	}
+	
+	*/
 
 	cin.get();
 	cin.get();

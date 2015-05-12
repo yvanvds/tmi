@@ -46,44 +46,59 @@ void algorithm1(vector<Square> squares){
 }
 
 void algorithm2(vector<Square> squares){
-	//TODO
 	
 	priority_queue<Event, vector<Event>, CompareEvent> pq;
 	vector<Interval<Square>> intervals;
 	IntervalTree<Square> activeTree;
+	vector<Interval<Square>> results;
 
 	for (int i = 0; i < squares.size(); i++){
-		Event e1 = Event(squares[i].getLB().getX(), squares[i]);
-		Event e2 = Event(squares[i].getRA().getX(), squares[i]);
+		Event e1 = Event(true, squares[i], squares[i].getLB().getX());
+		Event e2 = Event(false, squares[i], squares[i].getRA().getX());
 		pq.push( e1 ); //left side event of rectangle
 		pq.push( e2 ); //right side event of rectangle
 	}
-
-	/* Test priorith queue*/
 	
 	while (!pq.empty()) {
-		Event e = pq.top();
-		if (e.getX() == e.getSquare().getLB().getX()){
+		Event current = pq.top();
+		if (current.isLeftEdge()){
+			cout << "Add rectangle " << current.getSquare().getId() << " to active tree \n";
 			// left side of rectangle: add to 
-			intervals.push_back(Interval<Square>(e.getSquare().getLB().getY(), e.getSquare().getRA().getY(), e.getSquare()));
+			if (intervals.size() > 0){
+				//cout << "we test intersection for the interval [" << current.getSquare().getLB().getY() << "," << current.getSquare().getRA().getY() << "] \n";
+				activeTree.findOverlapping(current.getSquare().getLB().getY(), current.getSquare().getRA().getY(), results);
+				vector<Coordinate> pos;
+				for (int i = 0; i < results.size(); i++){
+					//cout << "the overlapping interval is [" << results[i].start << "," << results[i].stop << "] \n";
+					//cout << "the overlapping rectangle is " << results[i].value.getId() << endl;
+					//cout << "found " << results.size() << " overlapping intervals" << endl;
+					cout << "\nRectangle " << current.getSquare().getId() << " intersects Rectangle " << results[i].value.getId() << "\n";
+					results[i].value.getIntersection(current.getSquare(), pos);
+					for (int w = 0; w < pos.size(); w++){
+						cout << pos[w].getX() << " " << pos[w].getY() << endl;
+					}
+					cout << endl;
+					pos.clear();
+				}
+			}
+			intervals.push_back(Interval<Square>(current.getSquare().getLB().getY(), current.getSquare().getRA().getY(), current.getSquare()));
 			activeTree = IntervalTree<Square>(intervals);
-			
+			results.clear();
 		}
-		
-		if (e.getX() == e.getSquare().getRA().getX()){
-			// het element dat ik wil verwijderen staat als argument:
-			intervals.erase(Interval<Square>(e.getSquare().getLB().getY(), e.getSquare().getRA().getY(), e.getSquare()));
+		else {
+			cout << "Remove rectangle " << current.getSquare().getId() << " from active tree \n";
+			int index = 0;
+			for (int i = 0; i < intervals.size(); i++){
+				if (current.getSquare().getId() == intervals[i].value.getId()){
+					index = i;
+				}
+			}
+			intervals.erase(intervals.begin()+(index));
+			activeTree = IntervalTree<Square>(intervals);
+			results.clear();
 		}
-		//cout << e.getX() << endl;
-		//cout << active_set.size() << endl;
 		pq.pop();
-		
 	}
-	vector<Interval<Square> > results;
-	activeTree.findContained(0.2, 0.6, results);
-
-	//cout << results.size() << endl;
-	
 }
 
 void algorithm3(vector<Square> squares){
