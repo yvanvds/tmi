@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include"Coordinate.h"
+#include"IntervalTree.h"
 
 using namespace std;
 
@@ -25,6 +26,7 @@ public:
 
 	int getId();
 	void setId(int id);
+	SQINTERVAL getInterval();
 
 	bool intersects(Square square, vector<Coordinate> & points);
 	Square getBoundingRectangle(Square square, vector<double> pos);

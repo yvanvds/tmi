@@ -41,6 +41,10 @@ double Square::getHeight(){
 	return abs(getRA().getY() - getLB().getY());
 }
 
+SQINTERVAL Square::getInterval() {
+	return SQINTERVAL(getLB().getY(), getRA().getY(), *this);
+}
+
 bool Square::intersects(Square square, vector<Coordinate> & pos){
 	vector<double> boundingRectanglePoints;
 	Square boundingRectangle = getBoundingRectangle(square, boundingRectanglePoints);

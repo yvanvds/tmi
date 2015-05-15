@@ -1,3 +1,6 @@
+#define SQINTERVAL Interval<Square, float>
+#define SQINTERVALTREE IntervalTree<Square, float>
+
 #ifndef __INTERVAL_TREE_H
 #define __INTERVAL_TREE_H
 

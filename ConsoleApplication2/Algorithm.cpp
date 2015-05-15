@@ -23,23 +23,18 @@ void getIntersections(int algorithm, vector<Square> squares){
 
 void algorithm1(vector<Square> squares){
 	
-	vector<Coordinate> pos;
+	vector<Coordinate> results;
 	cout << endl;
 	for (int i = 0; i < squares.size(); i++){
 		for (int j = i; j < squares.size(); j++){
 			if (i != j){
 				
-				squares[i].intersects(squares[j], pos);
-				//TODO: get intersection points
-				
-				//cout << "square " << i+1 << " intersects square " << j+1 << endl;
-					
-				//squares[i].getIntersectionPoints(squares[j], pos);
-				for (int w = 0; w < pos.size(); w++){
-					cout << pos[w].getX() << " " << pos[w].getY() << endl;
+				squares[i].intersects(squares[j], results);
+				for (int w = 0; w < results.size(); w++){
+					cout << results[w].getX() << " " << results[w].getY() << endl;
 				}
 				cout << endl;
-				pos.clear();
+				results.clear();
 			}
 		}
 	}
@@ -47,20 +42,20 @@ void algorithm1(vector<Square> squares){
 
 void algorithm2(vector<Square> squares){
 	
-	priority_queue<Event, vector<Event>, CompareEvent> pq;
-	vector<Interval<Square>> intervals;
-	IntervalTree<Square> activeTree;
-	vector<Interval<Square>> results;
+	priority_queue<Event, vector<Event>, CompareEvent> events;
+	vector<SQINTERVAL> intervals;
+	IntervalTree<Square, float> activeTree;
+	vector<SQINTERVAL> results;
 
 	for (int i = 0; i < squares.size(); i++){
 		Event e1 = Event(true, squares[i], squares[i].getLB().getX());
 		Event e2 = Event(false, squares[i], squares[i].getRA().getX());
-		pq.push( e1 ); //left side event of rectangle
-		pq.push( e2 ); //right side event of rectangle
+		events.push( e1 ); //left side event of rectangle
+		events.push( e2 ); //right side event of rectangle
 	}
 	
-	while (!pq.empty()) {
-		Event current = pq.top();
+	while (!events.empty()) {
+		Event current = events.top();
 		if (current.isLeftEdge()){
 			cout << "Add rectangle " << current.getSquare().getId() << " to active tree \n";
 			// left side of rectangle: add to 
@@ -81,8 +76,8 @@ void algorithm2(vector<Square> squares){
 					pos.clear();
 				}
 			}
-			intervals.push_back(Interval<Square>(current.getSquare().getLB().getY(), current.getSquare().getRA().getY(), current.getSquare()));
-			activeTree = IntervalTree<Square>(intervals);
+			intervals.push_back(SQINTERVAL(current.getSquare().getInterval()));
+			activeTree = IntervalTree<Square, float>(intervals);
 			results.clear();
 		}
 		else {
@@ -94,10 +89,10 @@ void algorithm2(vector<Square> squares){
 				}
 			}
 			intervals.erase(intervals.begin()+(index));
-			activeTree = IntervalTree<Square>(intervals);
+			activeTree = IntervalTree<Square, float>(intervals);
 			results.clear();
 		}
-		pq.pop();
+		events.pop();
 	}
 }
 
