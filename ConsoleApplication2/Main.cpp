@@ -17,7 +17,6 @@ using namespace std;
 int _tmain(int argc, _TCHAR* argv[])
 {
 	
-	
 	string nextLine;
 	int count = 0;
 	int algorithm = 0;
@@ -28,10 +27,10 @@ int _tmain(int argc, _TCHAR* argv[])
 	ifstream input("input.txt");
 	if (input.is_open())
 	{
-		cout << "The following file is being read: \n\n";
+		//cout << "The following file is being read: \n\n";
 		while (getline(input, nextLine))
 		{
-			cout << nextLine << '\n';
+			//cout << nextLine << '\n';
 			count++;
 			if (count >= 3)
 			{
@@ -51,8 +50,7 @@ int _tmain(int argc, _TCHAR* argv[])
 			//cout << "\nRectangle " << i << " " << array[i].getLB().getX() << " " << array[i].getLB().getY() << " " << array[i].getRA().getX() << " " << array[i].getRA().getY();
 		}
 		
-		//getIntersections(algorithm, array);
-		getIntersections(2, rectangles);
+		getIntersections(algorithm, rectangles);
 		input.close();
 	}
 	
