@@ -12,7 +12,7 @@
 
 using namespace std;
 
-void getIntersections(int algorithm, vector<Square> squares){
+void getIntersections(int algorithm, vector<Square> & squares){
 	if (algorithm == 1){
 		algorithm1(squares);
 	}
@@ -24,7 +24,7 @@ void getIntersections(int algorithm, vector<Square> squares){
 	}
 }
 
-void algorithm1(vector<Square> squares){
+void algorithm1(vector<Square> & squares){
 	
 	vector<Coordinate> results; // contains the intersections of all rectangles
 	ofstream output;
@@ -55,7 +55,7 @@ void algorithm1(vector<Square> squares){
 	
 }
 
-void algorithm2(vector<Square> squares){
+void algorithm2(vector<Square> & squares){
 	
 	priority_queue<Event, vector<Event>, CompareEvent> events; 
 	vector<SQINTERVAL> intervals; // vector containg all vertical intervals and their rectangles
@@ -98,13 +98,15 @@ void algorithm2(vector<Square> squares){
 			results.clear();
 		}
 		else {
-			int index = 0;
-			for (int i = 0; i < intervals.size(); i++){
-				if (current.getSquare().getId() == intervals[i].value.getId()){
-					index = i;
+			//int index = 0;
+
+      for (vector<SQINTERVAL>::iterator i = intervals.begin(); i != intervals.end(); ++i){
+				if (current.getSquare().getId() == i->value.getId()){
+          intervals.erase(i);
+          break;
 				}
 			}
-			intervals.erase(intervals.begin()+(index));
+			//intervals.erase(intervals.begin()+(index));
 			activeTree = IntervalTree<Square, float>(intervals);
 			results.clear();
 		}
@@ -116,9 +118,10 @@ void algorithm2(vector<Square> squares){
 	auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
 	output << elapsed.count() << "\n"; 
 	output.close();
+  cout << "Ready. ";
 }
 
-void algorithm3(vector<Square> squares){
+void algorithm3(vector<Square> & squares){
 	algorithm2(squares);
 }
 

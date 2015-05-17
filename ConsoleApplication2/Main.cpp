@@ -13,7 +13,7 @@ using namespace std;
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	generateRectangles(2, 10);
+	generateRectangles(2, 100);
 	string nextLine;
 	int count = 0;
 	int algorithm = 0;
