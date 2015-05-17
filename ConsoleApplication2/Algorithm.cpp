@@ -26,45 +26,46 @@ void getIntersections(int algorithm, vector<Square> squares){
 
 void algorithm1(vector<Square> squares){
 	
-	vector<Coordinate> results;
+	vector<Coordinate> results; // contains the intersections of all rectangles
 	ofstream output;
 	output.open("uitvoerrechthoeken.txt");
 
+	// start timer
 	auto start = std::chrono::steady_clock::now();
 
-	cout << endl;
 	for (int i = 0; i < squares.size(); i++){
-		for (int j = i; j < squares.size(); j++){
-			if (i != j){
+		for (int j = i+1; j < squares.size(); j++){
 				
+				// find intersection between rectangle i and rectangle j
 				squares[i].intersects(squares[j], results);
 				
 				for (int w = 0; w < results.size(); w++){
 					output << results[w].getX() << " " << results[w].getY() << "\n";
-					//cout << results[w].getX() << " " << results[w].getY() << endl;
 				}
-				cout << endl;
 				results.clear();
-			}
 		}
 	}
 
+	// stop timer
 	auto end = std::chrono::steady_clock::now();
-	auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-	output << elapsed.count()/1000.0 << "\n";
+	auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+	output << elapsed.count() << "\n"; 
 	output.close();
+	cout << "Ready.";
 	
 }
 
 void algorithm2(vector<Square> squares){
 	
-	priority_queue<Event, vector<Event>, CompareEvent> events;
-	vector<SQINTERVAL> intervals;
-	IntervalTree<Square, float> activeTree;
-	vector<SQINTERVAL> results;
+	priority_queue<Event, vector<Event>, CompareEvent> events; 
+	vector<SQINTERVAL> intervals; // vector containg all vertical intervals and their rectangles
+	IntervalTree<Square, float> activeTree; // tree containing the vertical intervals
+	vector<SQINTERVAL> results; // contains the intersecting vertical intervals and their rectangles
+
 	ofstream output;
 	output.open("uitvoerrechthoeken.txt");
 
+	// start timer
 	auto start = std::chrono::steady_clock::now();
 
 	for (int i = 0; i < squares.size(); i++){
@@ -77,23 +78,18 @@ void algorithm2(vector<Square> squares){
 	while (!events.empty()) {
 		Event current = events.top();
 		if (current.isLeftEdge()){
-			//cout << "Add rectangle " << current.getSquare().getId() << " to active tree \n";
-			// left side of rectangle: add to 
+			
 			if (intervals.size() > 0){
-				//cout << "we test intersection for the interval [" << current.getSquare().getLB().getY() << "," << current.getSquare().getRA().getY() << "] \n";
+				
 				activeTree.findOverlapping(current.getSquare().getLB().getY(), current.getSquare().getRA().getY(), results);
 				vector<Coordinate> pos;
 				for (int i = 0; i < results.size(); i++){
-					//cout << "the overlapping interval is [" << results[i].start << "," << results[i].stop << "] \n";
-					//cout << "the overlapping rectangle is " << results[i].value.getId() << endl;
-					//cout << "found " << results.size() << " overlapping intervals" << endl;
-					//cout << "\nRectangle " << current.getSquare().getId() << " intersects Rectangle " << results[i].value.getId() << "\n";
+					
 					results[i].value.getIntersection(current.getSquare(), pos);
 					for (int w = 0; w < pos.size(); w++){
-						//cout << pos[w].getX() << " " << pos[w].getY() << endl;
 						output << pos[w].getX() << " " << pos[w].getY() << "\n";
 					}
-					//cout << endl;
+					
 					pos.clear();
 				}
 			}
@@ -102,7 +98,6 @@ void algorithm2(vector<Square> squares){
 			results.clear();
 		}
 		else {
-			//cout << "Remove rectangle " << current.getSquare().getId() << " from active tree \n";
 			int index = 0;
 			for (int i = 0; i < intervals.size(); i++){
 				if (current.getSquare().getId() == intervals[i].value.getId()){
@@ -116,12 +111,29 @@ void algorithm2(vector<Square> squares){
 		events.pop();
 	}
 
+	// stop timer
 	auto end = std::chrono::steady_clock::now();
-	auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-	output << elapsed.count() / 1000.0 << "\n";
+	auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+	output << elapsed.count() << "\n"; 
 	output.close();
 }
 
 void algorithm3(vector<Square> squares){
-	//TODO
+	algorithm2(squares);
+}
+
+void generateRectangles(int algorithm, int number){
+	float r0, r1, r2, r3;
+	ofstream output;
+	output.open("invoerrechthoeken.txt");
+	output << algorithm << "\n";
+	output << number << "\n";
+	for (int i = 0; i < number; i++){
+		r0 = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+		r1 = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+		r2 = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+		r3 = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+		output << r0 << " " << r1 << " " << r2 << " " << r3 << "\n";
+	}
+	output.close();
 }
