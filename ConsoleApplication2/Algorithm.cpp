@@ -51,7 +51,8 @@ void algorithm1(vector<Square> & squares){
 	auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
 	output << elapsed.count() << "\n"; 
 	output.close();
-	cout << "Ready.";
+	cout << "Ready.\n";
+	cout << elapsed.count();
 	
 }
 
@@ -67,7 +68,7 @@ void algorithm2(vector<Square> & squares){
 
 	// start timer
 	auto start = std::chrono::steady_clock::now();
-
+	
 	for (int i = 0; i < squares.size(); i++){
 		Event e1 = Event(true, squares[i], squares[i].getLB().getX());
 		Event e2 = Event(false, squares[i], squares[i].getRA().getX());
@@ -94,11 +95,11 @@ void algorithm2(vector<Square> & squares){
 				}
 			}
 			intervals.push_back(SQINTERVAL(current.getSquare().getInterval()));
+			
 			activeTree = IntervalTree<Square, float>(intervals);
 			results.clear();
 		}
 		else {
-			//int index = 0;
 
       for (vector<SQINTERVAL>::iterator i = intervals.begin(); i != intervals.end(); ++i){
 				if (current.getSquare().getId() == i->value.getId()){
@@ -106,7 +107,6 @@ void algorithm2(vector<Square> & squares){
           break;
 				}
 			}
-			//intervals.erase(intervals.begin()+(index));
 			activeTree = IntervalTree<Square, float>(intervals);
 			results.clear();
 		}
@@ -118,7 +118,8 @@ void algorithm2(vector<Square> & squares){
 	auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
 	output << elapsed.count() << "\n"; 
 	output.close();
-  cout << "Ready. ";
+	cout << "Ready. \n";
+	cout << elapsed.count();
 }
 
 void algorithm3(vector<Square> & squares){
@@ -127,15 +128,20 @@ void algorithm3(vector<Square> & squares){
 
 void generateRectangles(int algorithm, int number){
 	float r0, r1, r2, r3;
+	float x = 1.0;
 	ofstream output;
 	output.open("invoerrechthoeken.txt");
 	output << algorithm << "\n";
 	output << number << "\n";
 	for (int i = 0; i < number; i++){
-		r0 = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
-		r1 = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
-		r2 = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
-		r3 = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+		//r0 = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+		//r1 = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+		//r2 = static_cast <float> (rand()) / static_cast <float> (RAND_MAX/x);
+		//r3 = static_cast <float> (rand()) / static_cast <float> (RAND_MAX/x);
+		r0 = 0.0;
+		r1 = 0.0;
+		r2 = 1.0;
+		r3 = 1.0;
 		output << r0 << " " << r1 << " " << r2 << " " << r3 << "\n";
 	}
 	output.close();
