@@ -59,7 +59,7 @@ void algorithm1(vector<Square> & squares){
 void algorithm2(vector<Square> & squares){
 	
 	priority_queue<Event, vector<Event>, CompareEvent> events; 
-	vector<SQINTERVAL> intervals; // vector containg all vertical intervals and their rectangles
+	//vector<SQINTERVAL> intervals; // vector containg all vertical intervals and their rectangles
 	IntervalTree<Square, float> activeTree; // tree containing the vertical intervals
 	vector<SQINTERVAL> results; // contains the intersecting vertical intervals and their rectangles
 
@@ -80,7 +80,7 @@ void algorithm2(vector<Square> & squares){
 		Event current = events.top();
 		if (current.isLeftEdge()){
 			
-			if (intervals.size() > 0){
+			if (activeTree.getIntervals().size() > 0){
 				
 				activeTree.findOverlapping(current.getSquare().getLB().getY(), current.getSquare().getRA().getY(), results);
 				vector<Coordinate> pos;
@@ -94,20 +94,18 @@ void algorithm2(vector<Square> & squares){
 					pos.clear();
 				}
 			}
-			intervals.push_back(SQINTERVAL(current.getSquare().getInterval()));
-			
-			activeTree = IntervalTree<Square, float>(intervals);
+			activeTree.addInterval(SQINTERVAL(current.getSquare().getInterval()));
+      activeTree.sort();
 			results.clear();
 		}
 		else {
 
-      for (vector<SQINTERVAL>::iterator i = intervals.begin(); i != intervals.end(); ++i){
+      for (vector<SQINTERVAL>::iterator i = activeTree.getIntervals().begin(); i != activeTree.getIntervals().end(); ++i){
 				if (current.getSquare().getId() == i->value.getId()){
-          intervals.erase(i);
+          activeTree.getIntervals().erase(i);
           break;
 				}
 			}
-			activeTree = IntervalTree<Square, float>(intervals);
 			results.clear();
 		}
 		events.pop();

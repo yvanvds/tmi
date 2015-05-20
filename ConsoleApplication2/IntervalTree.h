@@ -161,6 +161,19 @@ public:
         }
     }
 
+    void addInterval(Interval<T,K> & interval) {
+      intervals.emplace_back(interval);
+    }
+
+    void sort() {
+      IntervalStartSorter<T, K> intervalStartSorter;
+      std::sort(intervals.begin(), intervals.end(), intervalStartSorter);
+    }
+
+    std::vector<Interval<T, K> > & getIntervals() {
+      return intervals;
+    }
+
     void findOverlapping(K start, K stop, intervalVector& overlapping) const {
         if (!intervals.empty() && ! (stop < intervals.front().start)) {
             for (typename intervalVector::const_iterator i = intervals.begin(); i != intervals.end(); ++i) {
